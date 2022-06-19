@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Plugin-Id: nf-ffq
+Plugin-Version: 0.1.0
+Plugin-Class: nextflow.ffq.FfqPlugin
+Plugin-Provider: nextflow
+Plugin-Requires: >=22.04.0
