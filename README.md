@@ -1,8 +1,23 @@
 # nf-ffq plugin 
  
-This project shows how to implement a simple Nextflow plugin named `nf-ffq` that intercepts 
-workflow execution events to print a message when the execution starts and on workflow completion.
+Proof of concept of a Nextflow plugin to fetch fastq samples via 
+[ffq](https://github.com/nextflow-io/nf-ffq).
 
+For example:
+
+```
+include { ffq } from 'plugin/nf-ffq'
+
+channel
+  .ffq('SRR9990627', aws:true, filetype: 'fastq')
+  .view()
+```
+
+It returns: 
+
+```
+[SRR9990627, [s3://sra-pub-src-16/SRR9990627/macula_donor_1_S100_L004_R1_001.fastq.gz.1, s3://sra-pub-src-17/SRR9990627/macula_donor_1_S100_L004_R2_001.fastq.gz.1]]
+```
 
 ## Compile & run unit tests 
 
