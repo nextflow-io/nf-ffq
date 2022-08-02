@@ -36,7 +36,7 @@ class FfqExtension extends ChannelExtensionPoint{
         this.client = new FfqClient()
     }
 
-    DataflowWriteChannel ffq(Map opts, String query) {
+    DataflowWriteChannel ffq(Map opts, def query) {
         CheckHelper.checkParams('ffq', opts, QUERY_PARAMS)
         return queryToChannel(query, opts)
     }
@@ -45,14 +45,14 @@ class FfqExtension extends ChannelExtensionPoint{
         return queryToChannel(query, Collections.emptyMap())
     }
 
-    protected DataflowWriteChannel queryToChannel(String query, Map opts) {
+    protected DataflowWriteChannel queryToChannel(def query, Map opts) {
         final result = CH.create()
         log.debug "Creating FFQ query channel"
         session.addIgniter {-> emit(query, opts, result) }
         return result
     }
 
-    protected void emit( String query, Map opts, DataflowWriteChannel result) {
+    protected void emit( def query, Map opts, DataflowWriteChannel result) {
         final files = client.fetchFiles(query, opts)
         for( def it : files )
             result.bind(it.toTuple())

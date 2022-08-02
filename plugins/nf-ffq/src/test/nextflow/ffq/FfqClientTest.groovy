@@ -13,7 +13,7 @@ class FfqClientTest extends Specification{
         def client = new FfqClient()
 
         when:
-        def result = client.fetchFiles('SRR9990627', [:])
+        def result = client.fetchFiles('GSM4339769', [:])
         println result 
         then:
         result.contains('ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR999/007/SRR9990627/SRR9990627_1.fastq.gz')
