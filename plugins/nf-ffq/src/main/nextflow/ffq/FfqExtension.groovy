@@ -33,7 +33,7 @@ class FfqExtension extends ChannelExtensionPoint{
     @Override
     protected void init(Session session) {
         this.session = session
-        this.client = new FfqClient()
+        this.client = new FfqClient(session)
     }
 
     DataflowWriteChannel ffq(Map opts, def query) {
