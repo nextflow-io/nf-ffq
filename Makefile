@@ -7,6 +7,10 @@ mm =
 endif 
 
 clean:
+	rm -rf .nextflow*
+	rm -rf work
+	rm -rf build
+	rm -rf plugins/*/build
 	./gradlew clean
 
 compile:
@@ -43,7 +47,15 @@ else
 	./gradlew ${mm}test --tests ${class}
 endif
 
+assemble:
+	./gradlew assemble
 
+#
+# generate build zips under build/plugins
+# you can install the plugin copying manually these files to $HOME/.nextflow/plugins
+#
+buildPlugins:
+	./gradlew copyPluginZip
 
 #
 # Upload JAR artifacts to Maven Central

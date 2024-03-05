@@ -42,7 +42,8 @@ class FfqClient {
         def uri = "${config.endpoint()}/${norm(query)}"
         if (opts.aws)
             uri += '?aws=true'
-        
+
+        log.debug "request: ${uri}"
         def response = new JsonSlurper().parse(new URL(uri))
         def result = new FileCollector(opts)
         log.debug "response: ${JsonOutput.prettyPrint( JsonOutput.toJson(response) )}"

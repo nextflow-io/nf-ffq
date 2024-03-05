@@ -1,13 +1,17 @@
 package nextflow.ffq.model
 
-import groovy.transform.CompileStatic
-import nextflow.util.TupleHelper
 
+import groovy.transform.CompileStatic
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import nextflow.util.TupleHelper
 /**
  * Model ffq result item
  *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
+@EqualsAndHashCode
+@ToString(includePackage = false, includeNames = true, includeFields = true)
 @CompileStatic
 class FileMeta {
 

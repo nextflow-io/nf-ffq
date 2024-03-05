@@ -6,7 +6,8 @@ import groovyx.gpars.dataflow.DataflowWriteChannel
 import nextflow.Channel
 import nextflow.Session
 import nextflow.extension.CH
-import nextflow.extension.ChannelExtensionPoint
+import nextflow.plugin.extension.Factory
+import nextflow.plugin.extension.PluginExtensionPoint
 import nextflow.util.CheckHelper
 /**
  * Implement channel factory to perform ffq queries
@@ -20,7 +21,7 @@ import nextflow.util.CheckHelper
  */
 @Slf4j
 @CompileStatic
-class FfqExtension extends ChannelExtensionPoint{
+class FfqExtension extends PluginExtensionPoint {
 
     private static final Map QUERY_PARAMS = [
             aws: Boolean,
@@ -36,11 +37,13 @@ class FfqExtension extends ChannelExtensionPoint{
         this.client = new FfqClient(session)
     }
 
+    @Factory
     DataflowWriteChannel ffq(Map opts, def query) {
         CheckHelper.checkParams('ffq', opts, QUERY_PARAMS)
         return queryToChannel(query, opts)
     }
 
+    @Factory
     DataflowWriteChannel ffq(String query) {
         return queryToChannel(query, Collections.emptyMap())
     }
