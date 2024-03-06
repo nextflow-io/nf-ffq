@@ -24,7 +24,7 @@ import nextflow.util.CheckHelper
 class FfqExtension extends PluginExtensionPoint {
 
     private static final Map QUERY_PARAMS = [
-            aws: Boolean,
+            links: String,
             filetype: String
     ]
 
@@ -50,8 +50,8 @@ class FfqExtension extends PluginExtensionPoint {
 
     protected DataflowWriteChannel queryToChannel(def query, Map opts) {
         final result = CH.create()
-        log.debug "Creating FFQ query channel"
-        session.addIgniter {-> emit(query, opts, result) }
+        log.trace "Creating FFQ query channel"
+        session.addIgniter(it-> emit(query, opts, result))
         return result
     }
 

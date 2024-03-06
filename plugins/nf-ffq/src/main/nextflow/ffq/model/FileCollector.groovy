@@ -18,9 +18,6 @@ class FileCollector implements Iterable<FileMeta> {
 
     FileCollector(Map opts) {
         this.opts = new HashMap(opts)
-        // default to 'fastq' file type
-        if( !this.opts.filetype )
-            this.opts.filetype = 'fastq'
     }
 
     Map opts() { return opts }
@@ -52,30 +49,34 @@ class FileCollector implements Iterable<FileMeta> {
         }
     }
 
-    void crawlUrl(Object object, boolean withinFiles=false) {
+    void crawlUrl(Object object) {
+        crawlUrl0(object, false)
+    }
+
+    protected void crawlUrl0(Object object, boolean withinResult) {
         if( !object )
             return
         if (object instanceof Map) {
-            if( object.get('url') && withinFiles ) {
+            if( object.get('url') && withinResult ) {
                 // found something
                 final acc = object['accession'] as String
                 final url = object['url'] as String
                 final type = object['filetype'] as String
-                if( type == opts().filetype ) {
+                if( !opts().filetype || type==opts().filetype ) {
                     entry(acc).add(url)
                 }
             }
             else {
                 // continue traversing
                 for( Map.Entry entry : (Map)object ) {
-                    log.debug "Traversing key: $entry.key"
-                    if( entry.key=='files' )
-                        withinFiles = true
+                    log.trace "Traversing key: $entry.key"
+                    if( entry.key=='results' )
+                        withinResult = true
                     if (entry.value instanceof Map ) {
-                        crawlUrl(entry.value, withinFiles)
+                        crawlUrl0(entry.value, withinResult)
                     }
                     else if ( entry.value instanceof Collection ) {
-                        crawlUrl(entry.value, withinFiles)
+                        crawlUrl0(entry.value, withinResult)
                     }
                 }
             }
@@ -83,7 +84,7 @@ class FileCollector implements Iterable<FileMeta> {
         }
         else if( object instanceof Collection ) {
             for( def it : (Collection)object ) {
-                crawlUrl(it, withinFiles)
+                crawlUrl0(it, withinResult)
             }
         }
         else {

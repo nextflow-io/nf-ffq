@@ -10,13 +10,15 @@ import nextflow.util.TupleHelper
  *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(includeFields = true)
 @ToString(includePackage = false, includeNames = true, includeFields = true)
 @CompileStatic
 class FileMeta {
 
     private String accession
     private List<String> files = new ArrayList<>(20)
+
+    protected FileMeta() {}
 
     FileMeta(String acc) {
         this.accession = acc

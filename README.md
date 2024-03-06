@@ -6,15 +6,23 @@ Nextflow plugin to fetch fastq samples using [ffq](https://github.com/nextflow-i
 
 The plugin adds a new channel factory called `channel.ffq()` which can be used to query fastq files.
 
-A simple usage is shown below:
+> [!Note]
+> This plugin requires Nextflow 24.01.0-edge or later.
 
+A simple usage is shown below:
 
 ```
 include { ffq } from 'plugin/nf-ffq'
 
 channel
-  .ffq('SRR9990627', aws:true, filetype: 'fastq')
+  .ffq('SRR9990627', filetype: 'fastq', links: 'aws')
   .view()
+```
+
+Run it using this command:
+
+```bash
+nextflow run <your script name> -plugins nf-ffq
 ```
 
 It returns: 
@@ -24,18 +32,30 @@ It returns:
 ```
 
 
+## Options
+
+The `ffq` method can take either a string value representing an accession ID, a string value representing string representing a comma separate list of accession IDs, or a list of string of accession IDs.
+
+The following options can be specified provided:
+
+| Option 	        | Description 	            |
+|---	            |---	                    |
+| `filetype`        | The requested file type, either `fastq` or `sra`
+| `links`           | The link type that should be returned, either `aws`, `gcp`, `ncbi`, `ftp`
+
+
 ## Configuration
 
 The plugin adds a new `ffq` config scope which supports the following options:
 
 | Config option 	| Description 	            |
-|---	            |---	                      |
-| `ffq.endpoint`  | URL of the ffq-api endpoint
+|---	            |---	                    |
+| `ffq.endpoint`    | URL of the ffq-api endpoint
 
 For example:
 ```
 ffq {
-  endpoint = 'https://ffq.staging-tower.xyz/'
+  endpoint = 'https://ffq.seqera.io'
 }
 ```
 
@@ -69,7 +89,7 @@ using the following steps:
 3. Compile the plugin along the Nextflow code, with this command:
 
     ```
-    ./gradlew compileGroovy
+    ./gradlew assemble
     ```
 
 4. Run Nextflow with plugins using the `./launch.sh` script as a drop-in replacement for the `nextflow` command and 

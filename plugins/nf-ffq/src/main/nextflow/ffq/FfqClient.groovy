@@ -22,6 +22,7 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.ffq.model.FileCollector
+
 /**
  * Simple http client to query ffq service
  *
@@ -40,26 +41,26 @@ class FfqClient {
     FileCollector fetchFiles(def query, Map opts) {
         assert query, "Missing ffq accession query"
         def uri = "${config.endpoint()}/${norm(query)}"
-        if (opts.aws)
-            uri += '?aws=true'
+        if( opts.links )
+            uri += "?links=$opts.links"
 
-        log.debug "request: ${uri}"
-        def response = new JsonSlurper().parse(new URL(uri))
-        def result = new FileCollector(opts)
-        log.debug "response: ${JsonOutput.prettyPrint( JsonOutput.toJson(response) )}"
+        log.debug "FFQ request: ${uri}"
+        final response = new JsonSlurper().parse(new URL(uri))
+        final result = new FileCollector(opts)
+        log.debug "FFQ response: ${JsonOutput.prettyPrint( JsonOutput.toJson(response) )}"
         result.crawlUrl(response)
         return result
     }
 
     protected String norm(def query) {
         if( !query )
-            throw new IllegalArgumentException("Ffq query parameter cannot be empty")
+            throw new IllegalArgumentException("FFQ query parameter cannot be empty")
         if( query instanceof List ) {
             return query.join(',')
         }
         if( query instanceof CharSequence )
             return query
-        throw new IllegalArgumentException("Ffq invalid query parameter type: ${query.getClass().getName()} - offending value: $query")
+        throw new IllegalArgumentException("FFQ invalid query parameter type: ${query.getClass().getName()} - offending value: $query")
     }
 
 }
